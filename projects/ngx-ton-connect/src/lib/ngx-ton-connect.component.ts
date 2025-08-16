@@ -4,13 +4,7 @@ import { Component } from '@angular/core';
   selector: 'lib-ngx-ton-connect',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      ngx-ton-connect works!
-    </p>
-  `,
-  styles: ``
+  template: ` <p>ngx-ton-connect works!</p> `,
+  styles: ``,
 })
-export class NgxTonconnectComponent {
-
-}
+export class NgxTonconnectComponent {}

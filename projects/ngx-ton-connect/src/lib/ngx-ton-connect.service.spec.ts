@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NgxTonconnectService } from './ngx-ton-connect.service';
+import { NgxTonConnectService } from './ngx-ton-connect.service';
 import { TON_CONNECT_CONFIG } from './config/TonConnectConfig.interface';
 
-describe('NgxTonconnectService', () => {
-  let service: NgxTonconnectService;
+describe('NgxTonConnectService', () => {
+  let service: NgxTonConnectService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,7 +18,7 @@ describe('NgxTonconnectService', () => {
         },
       ],
     });
-    service = TestBed.inject(NgxTonconnectService);
+    service = TestBed.inject(NgxTonConnectService);
   });
 
   it('should be created', () => {
@@ -30,7 +30,7 @@ describe('NgxTonconnectService', () => {
     service.connect();
     expect(spy).toHaveBeenCalledWith(
       'Connecting to TON Connect... Manifest URL :',
-      'https://raw.githubusercontent.com/ton-blockchain/dns/main/tonconnect-manifest.json'
+      'https://raw.githubusercontent.com/ton-blockchain/dns/main/tonconnect-manifest.json',
     );
   });
 });

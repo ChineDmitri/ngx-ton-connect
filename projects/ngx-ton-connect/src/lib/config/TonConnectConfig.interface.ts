@@ -8,9 +8,7 @@ export interface TonConnectConfig {
 /**
  * Injection token used to provide the TonConnect configuration.
  */
-export const TON_CONNECT_CONFIG = new InjectionToken<TonConnectConfig>(
-  'TON_CONNECT_CONFIG'
-);
+export const TON_CONNECT_CONFIG = new InjectionToken<TonConnectConfig>('TON_CONNECT_CONFIG');
 
 /** Default (empty) config used when none is provided. */
 export const DEFAULT_TON_CONNECT_CONFIG: TonConnectConfig = {};

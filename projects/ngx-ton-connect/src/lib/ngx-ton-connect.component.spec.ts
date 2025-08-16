@@ -8,10 +8,9 @@ describe('NgxTonconnectComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NgxTonconnectComponent]
-    })
-    .compileComponents();
-    
+      imports: [NgxTonconnectComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(NgxTonconnectComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
