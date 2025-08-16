@@ -1,0 +1,89 @@
+name: Release & Publish
+
+on:
+  push:
+    branches:
+      - "release_*"
+      - "minor_*"
+      - "patch_*"
+
+permissions:
+  contents: write   # create release, pousser tags/commits
+  packages: write
+
+jobs:
+  release:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org/"
+          always-auth: true
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Détermine le bump à partir du nom de branche
+      - name: Compute version bump from branch
+        id: bump
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+          if [[ "$BRANCH" == release_* ]]; then
+            echo "type=major" >> "$GITHUB_OUTPUT"
+          elif [[ "$BRANCH" == minor_* ]]; then
+            echo "type=minor" >> "$GITHUB_OUTPUT"
+          elif [[ "$BRANCH" == patch_* ]]; then
+            echo "type=patch" >> "$GITHUB_OUTPUT"
+          else
+            echo "Branche non supportée: $BRANCH" >&2
+            exit 1
+          fi
+          echo "Bump type: ${{ steps.bump.outputs.type }}"
+
+      - name: Configure git author
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+      # Bump version -> crée commit + tag vX.Y.Z (message inclut [skip ci] pour éviter relance)
+      - name: Bump version and create tag
+        id: version
+        run: |
+          NEW_VER=$(npm version ${{ steps.bump.outputs.type }} -m "chore(release): %s [skip ci]")
+          # npm version retourne "vX.Y.Z", on en extrait la version sans le "v"
+          CLEAN_VER="${NEW_VER#v}"
+          echo "version=$CLEAN_VER" >> "$GITHUB_OUTPUT"
+          echo "tag=v$CLEAN_VER" >> "$GITHUB_OUTPUT"
+
+      - name: Push commit and tag
+        run: |
+          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin ${{ steps.version.outputs.tag }}
+
+      - name: Build (optional)
+        if: hashFiles('package-lock.json') != ''
+        run: |
+          npm run 
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Si package scoped public: ajoute --access public
+          npm publish --provenance || npm publish --access public --provenance
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.version.outputs.tag }}
+          name: "Release ${{ steps.version.outputs.version }}"
+          generateReleaseNotes: true

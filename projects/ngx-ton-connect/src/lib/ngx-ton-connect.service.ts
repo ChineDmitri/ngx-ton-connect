@@ -128,7 +128,7 @@ export class NgxTonConnectService {
   /**
    * Type guard for WalletInfoRemote
    */
-  private isWalletInfoRemote(wallet: Wallet): wallet is WalletInfoRemote {
+  private isWalletInfoRemote(wallet: any): wallet is WalletInfoRemote {
     return wallet && 
            typeof wallet === 'object' && 
            'name' in wallet &&
