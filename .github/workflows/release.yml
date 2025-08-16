@@ -58,8 +58,8 @@ jobs:
       - name: Bump version and create tag
         id: version
         run: |
+          cd projects/ngx-ton-connect
           NEW_VER=$(npm version ${{ steps.bump.outputs.type }} -m "chore(release): %s [skip ci]")
-          # npm version retourne "vX.Y.Z", on en extrait la version sans le "v"
           CLEAN_VER="${NEW_VER#v}"
           echo "version=$CLEAN_VER" >> "$GITHUB_OUTPUT"
           echo "tag=v$CLEAN_VER" >> "$GITHUB_OUTPUT"
@@ -79,6 +79,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           # Si package scoped public: ajoute --access public
+          cd projects/ngx-ton-connect
           npm publish --provenance || npm publish --access public --provenance
 
       - name: Create GitHub Release
