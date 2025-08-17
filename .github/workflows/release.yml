@@ -67,8 +67,7 @@ jobs:
       - name: Push commit and tag
         run: |
           cd projects/ngx-ton-connect
-          git push origin HEAD:${GITHUB_REF_NAME}
-          git push origin ${{ steps.version.outputs.tag }}
+          git push origin HEAD:${GITHUB_REF_NAME} --follow-tags
 
       - name: Build (optional)
         if: hashFiles('package-lock.json') != ''
