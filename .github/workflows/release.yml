@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Détermine le bump à partir du nom de branche
+      # Detected branch type and set version bump type
       - name: Compute version bump from branch
         id: bump
         run: |
@@ -54,7 +54,7 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
-      # Bump version -> crée commit + tag vX.Y.Z (message inclut [skip ci] pour éviter relance)
+      # Bump version -> create commit + tag vX.Y.Z (message includes [skip ci] to avoid retriggering)
       - name: Bump version and create tag
         id: version
         run: |
@@ -66,7 +66,7 @@ jobs:
 
       - name: Push commit and tag
         run: |
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git fetch --tags
           git push origin ${{ steps.version.outputs.tag }}
 
       - name: Build (optional)
