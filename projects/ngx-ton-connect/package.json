@@ -12,5 +12,9 @@
   "devDependencies": {
     "@tonconnect/sdk": "^3.0.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChineDmitri/ngx-ton-connect"
+  }
 }
