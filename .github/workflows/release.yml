@@ -8,8 +8,9 @@ on:
       - "patch_*"
 
 permissions:
-  contents: write   # create release, pousser tags/commits
+  contents: write
   packages: write
+  id-token: write
 
 jobs:
   release:
@@ -68,11 +69,6 @@ jobs:
         run: |
           cd projects/ngx-ton-connect
           git push origin HEAD:${GITHUB_REF_NAME} --follow-tags
-
-      - name: Build (optional)
-        if: hashFiles('package-lock.json') != ''
-        run: |
-          npm run 
 
       - name: Publish to npm
         env:
